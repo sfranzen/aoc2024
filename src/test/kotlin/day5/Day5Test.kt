@@ -1,7 +1,6 @@
 ﻿package day5
 
 import org.junit.jupiter.api.Test
-
 import kotlin.test.assertEquals
 
 class Day5Test {
@@ -63,7 +62,25 @@ class Day5Test {
         val expected = listOf(true, true, true, false, false, false)
         val (sut, updates) = process(testInput)
 
-        assertEquals(expected, updates.map { sut.validate(it) })
+        assertEquals(expected, updates.map(sut::isValid))
+    }
+
+    @Test
+    fun sort() {
+        val input = listOf(
+            listOf(75, 97, 47, 61, 53),
+            listOf(61, 13, 29),
+            listOf(97, 13, 75, 29, 47)
+        )
+        val expected = listOf(
+            listOf(97, 75, 47, 61, 53),
+            listOf(61, 29, 13),
+            listOf(97, 75, 47, 29, 13)
+        )
+
+        val (sut, _) = process(testInput)
+
+        assertEquals(expected, input.map(sut::sort))
     }
 
     @Test
@@ -73,5 +90,6 @@ class Day5Test {
 
     @Test
     fun part2() {
+        assertEquals(123, part2(testInput))
     }
 }
