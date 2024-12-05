@@ -1,4 +1,5 @@
-﻿import day2.*
+﻿package day2
+
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 
