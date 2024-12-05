@@ -2,7 +2,7 @@ package day2
 
 import getInput
 
-val input = getInput(2).readLines()
+val input = getInput(2)
     .map { it.split("\\s".toRegex()).map(String::toInt) }
 
 fun isSafe(level: Collection<Int>) = level

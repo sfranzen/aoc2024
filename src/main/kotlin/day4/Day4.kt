@@ -2,7 +2,7 @@
 
 import getInput
 
-val input = getInput(4).readLines()
+val input = getInput(4)
 val xmas = arrayOf("XMAS", "SAMX")
 val x_mas = arrayOf("M.S.A.M.S", "S.S.A.M.M", "S.M.A.S.M", "M.M.A.S.S").map(String::toRegex)
 

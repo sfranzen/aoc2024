@@ -5,7 +5,7 @@ import getInput
 typealias Rule = List<Int>
 typealias Update = List<Int>
 
-val input = getInput(5).readLines()
+val input = getInput(5)
 
 fun process(input: List<String>): Pair<RuleSet, List<Update>> =
     input.filter(String::isNotBlank).partition { it.contains('|') }.run {

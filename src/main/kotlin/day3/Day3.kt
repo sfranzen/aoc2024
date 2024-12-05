@@ -26,6 +26,6 @@ fun part2(input: String, enabled: Boolean = true): UInt {
 }
 
 fun main() {
-    println(input.readLines().sumOf(::part1))
-    println(input.readText().let(::part2))
+    println(input.sumOf(::part1))
+    println(input.joinToString("").let(::part2))
 }

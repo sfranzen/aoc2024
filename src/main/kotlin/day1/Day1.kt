@@ -5,7 +5,7 @@ import kotlin.math.abs
 
 val input = getInput(1)
 
-fun getLists() = input.readLines()
+fun getLists() = input
     .map { line ->
         line.split("\\s+".toRegex())
             .map(String::toInt)
