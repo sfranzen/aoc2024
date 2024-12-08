@@ -1,6 +1,8 @@
 ﻿package day6
 
+import day6.Direction.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
@@ -19,19 +21,24 @@ class Day6Test {
     """.trimIndent().split('\n')
 
     @Test
-    fun `turn() turns the guard to the right`() {
-        val sut = Guard(Position(0, 0), Direction.Left)
-        val expected = Direction.entries
+    fun `Direction_next yields the next direction`() {
+        val input = Direction.entries
 
-        expected.forEach {
-            sut.turn()
-            assertEquals(it, sut.direction)
-        }
+        assertAll(
+            input.map {
+                val expected = when (it) {
+                    Up -> Right
+                    Right -> Down
+                    Down -> Left
+                    Left -> Up
+                }
+                { assertEquals(expected, it.next) }
+            })
     }
 
     @Test
     fun `findGuard() returns the single guard when present`() {
-        val expected = Guard(Position(6, 4), Direction.Up)
+        val expected = Guard(Position(6, 4), Up)
         assertEquals(expected, findGuard(testInput))
     }
 
@@ -48,5 +55,10 @@ class Day6Test {
     @Test
     fun part1() {
         assertEquals(41, part1(testInput))
+    }
+
+    @Test
+    fun part2() {
+        assertEquals(6, part2(testInput))
     }
 }
