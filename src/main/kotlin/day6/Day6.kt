@@ -1,5 +1,6 @@
 ﻿package day6
 
+import Vector2D
 import day6.Direction.*
 import getInput
 
@@ -17,7 +18,7 @@ class Room(private val layout: List<String>) {
         }
     }
 
-    fun inspect(pos: Position) = with(pos) { layout.getOrNull(row)?.getOrNull(col) }
+    fun inspect(pos: Vector2D) = with(pos) { layout.getOrNull(row)?.getOrNull(col) }
 
     fun showPath(path: Collection<Guard>): String {
         val clone = layout.map(String::toMutableList)
@@ -30,11 +31,9 @@ class Room(private val layout: List<String>) {
     }
 }
 
-data class Guard(val position: Position, val direction: Direction) {
+data class Guard(val position: Vector2D, val direction: Direction) {
     fun nextPosition() = nextPosition(position, direction)
 }
-
-data class Position(val row: Int, val col: Int)
 
 enum class Direction(val symbol: Char) {
     Up('^'), Right('>'), Down('v'), Left('<');
@@ -42,7 +41,7 @@ enum class Direction(val symbol: Char) {
     val next get() = entries[(ordinal + 1) % entries.size]
 }
 
-fun nextPosition(position: Position, direction: Direction) = with(position) {
+fun nextPosition(position: Vector2D, direction: Direction) = with(position) {
     when (direction) {
         Up -> copy(row = row - 1)
         Right -> copy(col = col + 1)
@@ -53,7 +52,7 @@ fun nextPosition(position: Position, direction: Direction) = with(position) {
 
 fun findGuard(layout: List<String>): Guard = layout.flatMapIndexed { rowIndex, row ->
     row.mapIndexedNotNull { colIndex, symbol ->
-        Direction.entries.find { it.symbol == symbol }?.let { Guard(Position(rowIndex, colIndex), it) }
+        Direction.entries.find { it.symbol == symbol }?.let { Guard(Vector2D(rowIndex, colIndex), it) }
     }
 }.single()
 

@@ -1,6 +1,7 @@
 package day7
 
 import getInput
+import tuples
 
 enum class Operator {
     Add, Multiply, Concatenate;
@@ -21,13 +22,6 @@ data class Equation(val result: ULong, val numbers: List<ULong>) {
     companion object {
         fun fromString(input: String) =
             """\d+""".toRegex().findAll(input).toList().map { it.value.toULong() }.let { Equation(it[0], it.drop(1)) }
-    }
-}
-
-fun <T> Collection<T>.tuples(k: Int, list: List<T> = emptyList()): Sequence<List<T>> = sequence {
-    when (k) {
-        0 -> yield(list)
-        else -> yieldAll(flatMap { tuples(k - 1, list + it) })
     }
 }
 

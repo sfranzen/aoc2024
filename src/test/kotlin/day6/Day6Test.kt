@@ -1,5 +1,6 @@
 ﻿package day6
 
+import Vector2D
 import day6.Direction.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
@@ -38,7 +39,7 @@ class Day6Test {
 
     @Test
     fun `findGuard() returns the single guard when present`() {
-        val expected = Guard(Position(6, 4), Up)
+        val expected = Guard(Vector2D(6, 4), Up)
         assertEquals(expected, findGuard(testInput))
     }
 
