@@ -7,7 +7,7 @@ import getInput
 
 data class Antenna(val position: Vector2D, val frequency: Char)
 
-class AntennaMap(layout: List<String>) : Map(layout) {
+class AntennaMap(layout: List<String>) : Map<Char>(fromStringList(layout)) {
     val antennas = mapIndexed { row, col, ch ->
         when (ch) {
             '.' -> null
