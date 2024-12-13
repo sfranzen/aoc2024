@@ -1,8 +1,9 @@
 package day10
 
 import DirectedGraph
-import Map
 import Vector2D
+import buildDiGraph
+import buildGraph
 import getInput
 
 enum class Direction(val vector: Vector2D) {
@@ -11,43 +12,47 @@ enum class Direction(val vector: Vector2D) {
     constructor(row: Int, col: Int) : this(Vector2D(row, col))
 }
 
-class TrailMap(input: List<List<Int>>) : Map<Int>(input) {
-    val trailHeads = mapIndexed { row, col, height ->
-        when (height) {
-            0 -> Vector2D(row, col)
-            else -> null
-        }
-    }.flatten().filterNotNull()
+data class Location(val position: Vector2D, val height: Int) {
+    constructor(row: Int, col: Int, height: Int) : this(Vector2D(row, col), height)
+}
 
-    val graph = DirectedGraph(trailHeads).apply {
-        vertices.forEach { populate(it) }
+class TrailMap(input: List<List<Int>>) {
+    val map = buildGraph {
+        input.forEachIndexed { rowIndex, row ->
+            row.mapIndexed { colIndex, height -> Location(rowIndex, colIndex, height) }.forEach(::addVertex)
+        }
+        vertices.forEach { vertex ->
+            directNeighbours(vertex).mapNotNull { position -> vertices.find { it.position == position } }.forEach {
+                addEdge(vertex, it)
+            }
+        }
+    }
+
+    val trailHeads = map.vertices.filter { it.height == 0 }.toSet()
+
+    val graph = buildDiGraph(map.vertices) {
+        fun populate(position: Location) {
+            connectedNeighbours(position)?.forEach {
+                addEdge(position, it)
+                populate(it)
+            }
+        }
+        trailHeads.forEach(::populate)
     }
 
     val score = trailHeads.sumOf { leafNodes(it).distinct().size }
 
-    private fun DirectedGraph<Vector2D>.populate(position: Vector2D) {
-        connectedNeighbours(position).forEach {
-            addVertex(it)
-            addEdge(position, it)
-            populate(it)
-        }
-    }
+    private fun connectedNeighbours(loc: Location) = map[loc]?.filter { it.height == loc.height + 1 }
 
-    private fun connectedNeighbours(position: Vector2D) = buildList {
-        get(position)?.let { value -> addAll(neighbours(position).filter { get(it) == value + 1 }) }
-    }
-
-    private fun neighbours(position: Vector2D) = Direction.entries.map { position + it.vector }
-
-    private fun leafNodes(position: Vector2D): List<Vector2D> = when (get(position)) {
-        null -> emptyList()
-        9 -> listOf(position)
-        else -> graph[position]?.flatMap(::leafNodes) ?: emptyList()
+    private fun leafNodes(loc: Location): List<Location> = when {
+        !map.contains(loc) -> emptyList()
+        loc.height == 9 -> listOf(loc)
+        else -> graph[loc]?.flatMap(::leafNodes) ?: emptyList()
     }
 
     companion object {
-        fun fromStringList(list: List<String>) =
-            TrailMap(list.map { it.map { char -> char.digitToIntOrNull() ?: -1 } })
+        fun fromStringList(list: List<String>) = TrailMap(list.map { it.map { char -> char.digitToIntOrNull() ?: -1 } })
+        private fun directNeighbours(loc: Location) = Direction.entries.map { loc.position + it.vector }
     }
 }
 

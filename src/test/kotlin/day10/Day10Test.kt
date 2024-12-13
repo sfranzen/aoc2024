@@ -1,11 +1,10 @@
 package day10
 
-import Vector2D
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class Day10Test {
-    val testInput = """
+    private val testInput = """
         89010123
         78121874
         87430965
@@ -29,7 +28,7 @@ class Day10Test {
             listOf(6, 0),
             listOf(6, 6),
             listOf(7, 1)
-        ).map{(a, b) -> Vector2D(a,b)}
+        ).map{ (a, b) -> Location(a, b, 0)}.toSet()
 
         assertEquals(expectedPositions, sut.trailHeads)
     }
@@ -57,5 +56,6 @@ class Day10Test {
 
     @Test
     fun part2() {
+        assertEquals(81, part1(testInput))
     }
 }
