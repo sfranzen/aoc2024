@@ -56,6 +56,6 @@ class Day10Test {
 
     @Test
     fun part2() {
-        assertEquals(81, part1(testInput))
+        assertEquals(81, part2(testInput))
     }
 }

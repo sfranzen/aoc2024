@@ -2,7 +2,7 @@
 
 interface Graph<T> {
     val vertices: Set<T>
-    operator fun get(vertex: T): Set<T>?
+    operator fun get(key: T): Set<T>?
     fun contains(vertex: T): Boolean = this[vertex] != null
     fun isAdjacent(from: T, to: T): Boolean = this[from]?.contains(to) ?: false
     fun neighbours(vertex: T): Set<T>? = this[vertex]
@@ -18,21 +18,21 @@ inline fun <T : Any> buildGraph(vertices: Collection<T> = emptyList(), block: Un
 inline fun <T : Any> buildDiGraph(vertices: Collection<T> = emptyList(), block: DirectedGraph<T>.() -> Unit) =
     DirectedGraph(vertices).apply(block)
 
-open class AbstractGraph<T : Any>(vertices: Collection<T>) : Graph<T> {
-    protected val map = ConcurrentHashMap<T, MutableSet<T>>(vertices.size).apply {
+open class AbstractGraph<T : Any>(vertices: Collection<T>) : Graph<T>,
+    MutableMap<T, MutableSet<T>> by ConcurrentHashMap(vertices.size) {
+    init {
         putAll(vertices.map { it to mutableSetOf() })
     }
 
-    override val vertices = map.keys
-    override fun get(vertex: T) = map[vertex]
+    override val vertices get() = keys
 
-    override fun addVertex(vertex: T) = map.put(vertex, mutableSetOf())
-    override fun removeVertex(vertex: T) = map.remove(vertex)?.also {
-        map.values.forEach { it.remove(vertex) }
+    override fun addVertex(vertex: T) = put(vertex, mutableSetOf())
+    override fun removeVertex(vertex: T) = remove(vertex)?.also {
+        values.forEach { it.remove(vertex) }
     }
 
-    override fun addEdge(from: T, to: T) = map.getOrPut(from, ::mutableSetOf).add(to)
-    override fun removeEdge(from: T, to: T) = map[from]?.remove(to) ?: false
+    override fun addEdge(from: T, to: T) = getOrPut(from, ::mutableSetOf).add(to)
+    override fun removeEdge(from: T, to: T) = this[from]?.remove(to) ?: false
 }
 
 open class DirectedGraph<T : Any>(vertices: Collection<T> = emptyList()) : AbstractGraph<T>(vertices)

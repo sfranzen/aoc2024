@@ -1,6 +1,5 @@
 package day10
 
-import DirectedGraph
 import Vector2D
 import buildDiGraph
 import buildGraph
@@ -30,7 +29,7 @@ class TrailMap(input: List<List<Int>>) {
 
     val trailHeads = map.vertices.filter { it.height == 0 }.toSet()
 
-    val graph = buildDiGraph(map.vertices) {
+    val trails = buildDiGraph(map.vertices) {
         fun populate(position: Location) {
             connectedNeighbours(position)?.forEach {
                 addEdge(position, it)
@@ -47,7 +46,12 @@ class TrailMap(input: List<List<Int>>) {
     private fun leafNodes(loc: Location): List<Location> = when {
         !map.contains(loc) -> emptyList()
         loc.height == 9 -> listOf(loc)
-        else -> graph[loc]?.flatMap(::leafNodes) ?: emptyList()
+        else -> trails[loc]?.flatMap(::leafNodes) ?: emptyList()
+    }
+
+    fun countPaths(from: Location): Int = when {
+        from.height == 9 -> 1
+        else -> trails[from]?.sumOf(::countPaths) ?: 0
     }
 
     companion object {
@@ -57,9 +61,10 @@ class TrailMap(input: List<List<Int>>) {
 }
 
 fun part1(input: List<String>) = TrailMap.fromStringList(input).score
-fun part2(input: List<String>) = 0
+fun part2(input: List<String>) = TrailMap.fromStringList(input).run { trailHeads.sumOf(::countPaths) }
 
 fun main() {
     val input = getInput(10)
     println(part1(input))
+    println(part2(input))
 }
