@@ -5,7 +5,7 @@ data class Vector2D(val row: Int, val col: Int) {
     operator fun minus(other: Vector2D) = copy(row = row - other.row, col = col - other.col)
 }
 
-open class Map<out T>(layout: List<List<T>>) : List<List<T>> by layout {
+open class Map2D<out T>(layout: List<List<T>>) : List<List<T>> by layout {
     val height get() = size
     val width get() = getOrNull(0)?.size ?: 0
 
@@ -21,6 +21,6 @@ open class Map<out T>(layout: List<List<T>>) : List<List<T>> by layout {
     override fun toString(): String = joinToString("\n")
 
     companion object {
-        fun fromStringList(strings: List<String>) = Map(strings.map(String::toList))
+        fun fromStringList(strings: List<String>) = Map2D(strings.map(String::toList))
     }
 }

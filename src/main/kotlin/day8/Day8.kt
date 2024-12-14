@@ -1,13 +1,13 @@
 package day8
 
-import Map
+import Map2D
 import Vector2D
 import combinations
 import getInput
 
 data class Antenna(val position: Vector2D, val frequency: Char)
 
-class AntennaMap(layout: List<String>) : Map<Char>(fromStringList(layout)) {
+class AntennaMap(layout: List<String>) : Map2D<Char>(fromStringList(layout)) {
     val antennas = mapIndexed { row, col, ch ->
         when (ch) {
             '.' -> null
