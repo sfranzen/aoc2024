@@ -5,6 +5,12 @@ data class Vector2D(val row: Int, val col: Int) {
     operator fun minus(other: Vector2D) = copy(row = row - other.row, col = col - other.col)
 }
 
+enum class Direction(val vector: Vector2D) {
+    Up(-1, 0), Right(0, 1), Down(1, 0), Left(0, -1);
+
+    constructor(row: Int, col: Int) : this(Vector2D(row, col))
+}
+
 open class Map2D<out T>(layout: List<List<T>>) : List<List<T>> by layout {
     val height get() = size
     val width get() = getOrNull(0)?.size ?: 0

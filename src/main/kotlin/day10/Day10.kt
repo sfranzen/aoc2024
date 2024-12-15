@@ -1,22 +1,17 @@
 package day10
 
+import Direction
 import Vector2D
 import buildDiGraph
 import buildGraph
 import getInput
-
-enum class Direction(val vector: Vector2D) {
-    Up(-1, 0), Right(0, 1), Down(1, 0), Left(0, -1);
-
-    constructor(row: Int, col: Int) : this(Vector2D(row, col))
-}
 
 data class Location(val position: Vector2D, val height: Int) {
     constructor(row: Int, col: Int, height: Int) : this(Vector2D(row, col), height)
 }
 
 class TrailMap(input: List<List<Int>>) {
-    val map = buildGraph {
+    val map = buildGraph<Location> {
         input.forEachIndexed { rowIndex, row ->
             row.mapIndexed { colIndex, height -> Location(rowIndex, colIndex, height) }.forEach(::addVertex)
         }
