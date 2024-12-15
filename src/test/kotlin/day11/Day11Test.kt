@@ -16,7 +16,6 @@ class Day11Test {
 
     @Test
     fun blinkSequence() {
-        val input = "125 17"
         val expected = listOf(
             "253000 1 7",
             "253 0 2024 14168",
@@ -25,18 +24,22 @@ class Day11Test {
             "1036288 7 2 20 24 4048 1 4048 8096 28 67 60 32",
             "2097446912 14168 4048 2 0 2 4 40 48 2024 40 48 80 96 2 8 6 7 6 0 3 2"
         )
-        val sut = blinkSequence(input)
+        val sut = blinkSequence(testInput)
 
         assertEquals(expected, sut.take(6).toList())
     }
 
     @Test
-    fun part1() {
-        assertEquals(55312, part1(testInput))
+    fun stoneCounter() {
+        val expected = listOf(3, 4, 5, 9, 13, 21).map(Int::toULong)
+        val sut = StoneCounter(testInput)
+        val output = generateSequence { sut.blink(); sut.count() }
+
+        assertEquals(expected, output.take(6).toList())
     }
 
     @Test
-    fun part2() {
-        assertEquals(1, part2(testInput))
+    fun part1() {
+        assertEquals(55312, part1(testInput))
     }
 }
