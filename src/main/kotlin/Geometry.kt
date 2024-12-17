@@ -1,4 +1,4 @@
-data class Vector2D(val row: Int, val col: Int) {
+data class Vector2D(val row: Int = 0, val col: Int = 0) {
     operator fun unaryMinus() = copy(row = -row, col = -col)
     operator fun unaryPlus() = copy()
     operator fun plus(other: Vector2D) = copy(row = row + other.row, col = col + other.col)
