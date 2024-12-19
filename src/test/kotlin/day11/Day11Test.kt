@@ -31,7 +31,7 @@ class Day11Test {
 
     @Test
     fun stoneCounter() {
-        val expected = listOf(3, 4, 5, 9, 13, 21).map(Int::toULong)
+        val expected = listOf(3, 4, 5, 9, 13, 22).map(Int::toULong)
         val sut = StoneCounter(testInput)
         val output = generateSequence { sut.blink(); sut.count() }
 
