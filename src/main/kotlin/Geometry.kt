@@ -11,11 +11,19 @@ enum class Direction(val vector: Vector2D) {
     constructor(row: Int, col: Int) : this(Vector2D(row, col))
 }
 
-open class Map2D<out T>(layout: List<List<T>>) : List<List<T>> by layout {
+fun line(position: Vector2D, direction: Vector2D) = generateSequence(position) { it + direction }
+
+open class Map2D<T>(layout: List<List<T>>) : List<List<T>> by layout {
     val height get() = size
     val width get() = getOrNull(0)?.size ?: 0
 
     fun contains(position: Vector2D): Boolean = with(position) { row in indices && col in 0..<width }
+
+    fun positionOf(value: T): Vector2D? = map { list -> list.indexOf(value) }.withIndex().find { (_, col) -> col != -1 }
+        ?.let { (row, col) -> Vector2D(row, col) }
+
+    fun positions(value: T): List<Vector2D> =
+        mapIndexed { row, col, t -> if (value == t) Vector2D(row, col) else null }.flatten().filterNotNull()
 
     fun get(row: Int, col: Int): T? = getOrNull(row)?.getOrNull(col)
     fun get(position: Vector2D): T? = with(position) { get(row, col) }

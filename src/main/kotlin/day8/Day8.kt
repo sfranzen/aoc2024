@@ -4,6 +4,7 @@ import Map2D
 import Vector2D
 import combinations
 import getInput
+import line
 
 data class Antenna(val position: Vector2D, val frequency: Char)
 
@@ -24,11 +25,9 @@ class AntennaMap(layout: List<String>) : Map2D<Char>(fromStringList(layout)) {
 
     val updatedAntinodes = combinations.flatMap { (a, b) ->
         val dist = b.position - a.position
-        fun line(position: Vector2D, direction: Vector2D) =
-            generateSequence(position) { it + direction }.takeWhile(::contains)
         buildList {
-            addAll(line(a.position, -dist))
-            addAll(line(b.position, dist))
+            addAll(line(a.position, -dist).takeWhile { this@AntennaMap.contains(it) })
+            addAll(line(b.position, dist).takeWhile { this@AntennaMap.contains(it) })
         }
     }.distinct()
 }
