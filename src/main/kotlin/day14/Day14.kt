@@ -29,6 +29,19 @@ class RoboMap(private val robots: List<Robot>, private val width: Int, private v
         }
     }.trimEnd()
 
+    fun hasXmasTree(): Boolean = robots.asSequence().filter { it.position.x == width / 2 }.any { centeredRobot ->
+        treePattern(centeredRobot.position.y + 1).all { v -> robots.any { it.position == v } }
+    }
+
+    private fun treePattern(yStart: Int) = sequence {
+        var y = yStart
+        for (x in 1..3) {
+            yield(Vector(width / 2 - x, y))
+            yield(Vector(width / 2 + x, y))
+            ++y
+        }
+    }
+
     private fun update(robot: Robot) = with(robot) {
         position = position.let { Vector(floorMod(it.x + velocity.x, width), floorMod(it.y + velocity.y, height)) }
     }
@@ -60,9 +73,19 @@ fun part1(input: List<String>, width: Int, height: Int): ULong {
     return map.safetyFactor
 }
 
-fun part2(input: List<String>) = 0
+fun part2(input: List<String>): ULong {
+    val map = createRoboMap(input, 101, 103)
+    var steps: ULong = 0u
+    while (steps < 1000000u && !map.hasXmasTree()) {
+        map.step()
+        ++steps
+    }
+    println(map)
+    return steps
+}
 
 fun main() {
     val input = getInput(14)
     println(part1(input, 101, 103))
+    println(part2(input))
 }

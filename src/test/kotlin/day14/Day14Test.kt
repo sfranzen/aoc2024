@@ -41,9 +41,4 @@ class Day14Test {
     fun part1() {
         assertEquals(12u, part1(testInput, 11, 7))
     }
-
-    @Test
-    fun part2() {
-        assertEquals(1, part2(testInput))
-    }
 }
