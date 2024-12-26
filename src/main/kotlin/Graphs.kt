@@ -40,4 +40,26 @@ open class DirectedGraph<T : Any>(vertices: Collection<T> = emptyList()) : Abstr
 open class UndirectedGraph<T : Any>(vertices: Collection<T> = emptyList()) : AbstractGraph<T>(vertices) {
     override fun addEdge(from: T, to: T): Boolean = super.addEdge(from, to) && super.addEdge(to, from)
     override fun removeEdge(from: T, to: T) = super.removeEdge(from, to) && super.removeEdge(to, from)
+
+    // The Bron-Kerbosch algorithm recursively locates the maximal cliques of an undirected graph.
+    fun bronKerbosch(): List<Set<T>> = bronKerboschImpl(emptySet(), vertices, emptySet())
+
+    // An implementation of the Bron-Kerbosch algorithm with pivot vertex. The vertex of the highest degree in the
+    // subset P U X is chosen as the pivot.
+    private fun bronKerboschImpl(r: Set<T>, p: Set<T>, x: Set<T>): List<Set<T>> {
+        if (p.isEmpty() && x.isEmpty()) {
+            return listOf(r)
+        }
+
+        val u = p.union(x).maxBy { neighbours(it)!!.size }
+        val p1 = p.toMutableSet()
+        val x1 = x.toMutableSet()
+        return (p - neighbours(u)!!).flatMap { v ->
+            val nv = neighbours(v)!!
+            bronKerboschImpl(r + v, p1.intersect(nv), x1.intersect(nv)).also {
+                p1 -= v
+                x1 += v
+            }
+        }
+    }
 }
